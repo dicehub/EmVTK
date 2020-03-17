@@ -1,28 +1,48 @@
-### Simple example of cone rendering in browser using VTK and Emscripten.
+### Description
+
+Simple example of a cone rendering in the browser using VTK and Emscripten.
 
 #### Build using docker
 
-Run ```docker build . -t emvtk``` to build emvtk image. Run ```docker run --rm -it -p 6931:6931 emvtk``` to start web server on 6931 port. Result should be accesible by url ```http://localhost:6931```
+Execute to build the emvtk image:
+
+```shell
+docker build . -t emvtk
+```
+
+Run to start web server on port 6931:
+
+```shell
+docker run --rm -it -p 6931:6931 emvtk
+```
+
+Result should now be accesible at:
+
+```
+http://localhost:6931
+```
 
 #### Build without docker
 
-Before build following requirements should be met:
+Before the build following requirements should be met:
 
-- Installed Emscripten
-- Active Emscripten environment (i.e. ```source ./emsdk_env.sh``` for Bash)
-- ```CMAKE_TOOLCHAIN_FILE``` environment variable should me set to ```<emsdk install path>/upstream/    emscripten/cmake/Modules/Platform/Emscripten.cmake```
-- Compiled VTK, using Emscripten ([how to build VTK](#how-to-build-vtk-using-emscripten))
-- ```VTK_BUILD_DIR``` environment variable should me set to VTK build directory
+- Install [Emscripten](https://emscripten.org/)
+- Activate Emscripten environment (i.e. ```source ./emsdk_env.sh``` for Bash)
+- ```CMAKE_TOOLCHAIN_FILE``` environment variable should be set to ```<emsdk install path>/upstream/    emscripten/cmake/Modules/Platform/Emscripten.cmake```
+- Compil VTK, using Emscripten ([how to build VTK](#how-to-build-vtk-using-emscripten))
+- ```VTK_BUILD_DIR``` environment variable should be set to VTK build directory
 
-Use ```make build-local``` command to build and run example. Result should be accesible by url ```http://localhost:6931```.
+Use ```make build-local``` command to build and run the example. Result should be accesible at: ```http://localhost:6931```.
 
 ### How to build VTK using Emscripten
 
-Build requires following branch of VTK [```https://github.com/dicehub/VTK/tree/emscripten```](https://github.com/dicehub/VTK/tree/emscripten).
+Build requires the following branch of VTK [```https://github.com/dicehub/VTK/tree/emscripten```](https://github.com/dicehub/VTK/tree/emscripten).
 
-First of all, freetype port should be enabled for Emscripten compiler. It can be done by setting CXXFLAGS environment variable, for example:
+First of all, freetype port should be enabled for Emscripten compiler. It can be done by setting the CXXFLAGS environment variable, for example:
 
-        export CXXFLAGS='-s USE_FREETYPE=1'
+```shell
+export CXXFLAGS='-s USE_FREETYPE=1'
+```
 
 Then, ninja build files should be generated, using ```CMake```:
 
@@ -42,9 +62,10 @@ Then, ninja build files should be generated, using ```CMake```:
         -DFREETYPE_LIBRARY:STRING='freetype' \
         ../VTK
 
-And build it:
+And build it with:
 
         ninja -j "$(nproc)"
 
-In command above, freetype library faked using cmake options ```FREETYPE_INCLUDE_DIRS``` and ```FREETYPE_LIBRARY```. Also, ```getpwuid``` is disabled because currently it missing in Emscripten. Full example can be found in ```Dockerfile```.
+In the command above, freetype library is faked using cmake options ```FREETYPE_INCLUDE_DIRS``` and ```FREETYPE_LIBRARY```. Also, ```getpwuid``` is disabled because currently it is missing in Emscripten. 
+Full example can be found in the ```Dockerfile```.
 
